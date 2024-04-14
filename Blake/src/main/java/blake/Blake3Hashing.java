@@ -1,10 +1,5 @@
 package blake;
 import org.apache.commons.codec.digest.Blake3;
-// import java.io.FileInputStream;
-// import java.io.FileOutputStream;
-// import java.io.BufferedOutputStream;
-// import java.io.BufferedInputStream;
-// import java.io.IOException;
 import java.io.*;
 import java.util.*;
 
@@ -39,7 +34,6 @@ public class Blake3Hashing {
       if (args[0].equals("read")) {
         readKeyHashPairs("data.bin");
         return;
-
       }
       
       try (FileOutputStream fos = new FileOutputStream("data.bin");
@@ -90,10 +84,9 @@ public class Blake3Hashing {
   }
 
   public static void readKeyHashPairs(String filename) {
-    // List<KeyHashPair> pairs = new ArrayList<>();
     try (FileInputStream fis = new FileInputStream(filename);
         BufferedInputStream bis = new BufferedInputStream(fis)) {
-      int pairSize = 64; // (key size + hash size)
+      int pairSize = 64;
       while (bis.available() > 0) {
         byte[] data = new byte[pairSize];
         int bytesRead = bis.read(data);
@@ -101,14 +94,12 @@ public class Blake3Hashing {
           break;
         }
         // pairs.add(new KeyHashPair(Arrays.copyOf(data, pairSize / 2), Arrays.copyOfRange(data, pairSize / 2, pairSize)));
-            System.out.println(String.format("Key: %s Hash: %s", bytesToHex(Arrays.copyOf(data, pairSize / 2)), bytesToHex(Arrays.copyOfRange(data, pairSize / 2, pairSize))));
+        System.out.println(String.format("Key: %s Hash: %s", bytesToHex(Arrays.copyOf(data, pairSize / 2)), bytesToHex(Arrays.copyOfRange(data, pairSize / 2, pairSize))));
       }
     } catch (IOException e) {
-      // Handle file reading exception (e.g., file not found, corrupted data)
       e.printStackTrace();
-      // throw e; // Re-throw the exception for caller to handle
     }
     return;
-}
+  }
     
 }
