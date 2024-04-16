@@ -3,6 +3,12 @@ import org.apache.commons.codec.digest.Blake3;
 import java.io.*;
 import java.util.*;
 
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+
 class KeyHashPair {
   private byte[] key;
   private byte[] hash;
@@ -35,11 +41,17 @@ public class Blake3Hashing {
         readKeyHashPairs("data.bin");
         return;
       }
-      
-      try (FileOutputStream fos = new FileOutputStream("data.bin");
-      BufferedOutputStream bos = new BufferedOutputStream(fos)){
-        
-        long max = 1024*1024*16; 
+    Configuration conf = new Configuration();
+
+    Path filePath = new Path("data.bin"); // Replace with your desired path
+    // FileSystem fs = FileSystem.get(conf);
+    // FSDataOutputStream out = fs.create(filePath);
+
+    try (FileSystem fs = FileSystem.get(conf);
+        // Path filePath = new Path("data.bin");
+          FSDataOutputStream out = fs.create(filePath);) {
+
+        long max = 1024*1024*1; 
         for (long i = 0; i < max; i++) {
             long num=i;
 
@@ -58,21 +70,59 @@ public class Blake3Hashing {
             // Print the hash in hexadecimal format
             // System.out.println(String.format("Key: %s Hash: %s", bytesToHex(key), bytesToHex(hash)));
             KeyHashPair pair = new KeyHashPair(key, hash);
+            out.write(pair.getKey());
+            out.write(pair.getHash());
             // Write the pair to the buffer
-            bos.write(pair.getKey());
-            bos.write(pair.getHash());
+            // oos.writeObject(pair);
+            // bos.write(pair.getKey());
+            // bos.write(pair.getHash());
         }
+      // Serialize each object
+      // oos.writeObject(pair2);
 
-        // Flush the buffer to write remaining data to the file
-        bos.flush();
-        // Close the streams
-        bos.close();
-        fos.close();
-      }  catch (IOException e) {
-        // Handle file writing exception (e.g., disk full, permission issues)
+      // Write serialized byte array to HDFS
+      // out.write(bos.toByteArray());
+      out.close();
+      fs.close();
+    } catch (IOException e) {
         e.printStackTrace();
-        // throw e; // Re-throw the exception for caller to handle
       }
+      
+      // try (FileOutputStream fos = new FileOutputStream("data.bin");
+      // BufferedOutputStream bos = new BufferedOutputStream(fos)){
+
+      //   long max = 1024*1024*1; 
+      //   for (long i = 0; i < max; i++) {
+      //       long num=i;
+
+      //       byte[] key = new byte[32];
+      //       for (int j = 0; j < key.length; j++) {
+      //         key[j] = (byte) (num & 0xFF);
+      //         num = num >> 8; // Shift right to access next 8 bits
+      //       }
+      //       // Create a Blake3 hasher
+      //       Blake3 hasher = Blake3.initKeyedHash(key);
+
+      //       // Finalize the hash and get the result
+      //       byte[] hash = new byte[32];
+      //       hasher.doFinalize(hash);
+
+      //       // Print the hash in hexadecimal format
+      //       // System.out.println(String.format("Key: %s Hash: %s", bytesToHex(key), bytesToHex(hash)));
+      //       KeyHashPair pair = new KeyHashPair(key, hash);
+      //       // Write the pair to the buffer
+      //       bos.write(pair.getKey());
+      //       bos.write(pair.getHash());
+      //   }
+
+      //   // Flush the buffer to write remaining data to the file
+      //   bos.flush();
+      //   // Close the streams
+      //   bos.close();
+      //   fos.close();
+      // }  catch (IOException e) {
+      //   e.printStackTrace();
+      // }
   }
 
   private static String bytesToHex(byte[] bytes) {
@@ -100,6 +150,5 @@ public class Blake3Hashing {
       e.printStackTrace();
     }
     return;
-  }
-    
+  } 
 }
