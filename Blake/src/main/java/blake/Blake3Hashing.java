@@ -1,9 +1,8 @@
 package blake;
-import org.apache.commons.codec.digest.Blake3;
+
 import java.io.*;
 import java.util.*;
-
-
+import org.apache.commons.codec.digest.Blake3;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -36,47 +35,45 @@ class KeyHashPair {
 }
 
 public class Blake3Hashing {
-    public static void main(String[] args) {
-      if (args[0].equals("read")) {
-        readKeyHashPairs("data.bin");
-        return;
-      }
+  public static void main(String[] args) {
+    System.out.println(args[0]);
+    if (args[0].equals("read")) {
+      readKeyHashPairs("data.bin");
+      return;
+    }
     Configuration conf = new Configuration();
 
-    Path filePath = new Path("data.bin"); // Replace with your desired path
-    // FileSystem fs = FileSystem.get(conf);
-    // FSDataOutputStream out = fs.create(filePath);
+    Path filePath = new Path("data.bin");
 
     try (FileSystem fs = FileSystem.get(conf);
-        // Path filePath = new Path("data.bin");
-          FSDataOutputStream out = fs.create(filePath);) {
+        FSDataOutputStream out = fs.create(filePath); ) {
 
-        long max = 1024*1024*1; 
-        for (long i = 0; i < max; i++) {
-            long num=i;
+      long max = 1024 * 1024 * 1;
+      for (long i = 0; i < max; i++) {
+        long num = i;
 
-            byte[] key = new byte[32];
-            for (int j = 0; j < key.length; j++) {
-              key[j] = (byte) (num & 0xFF);
-              num = num >> 8; // Shift right to access next 8 bits
-            }
-            // Create a Blake3 hasher
-            Blake3 hasher = Blake3.initKeyedHash(key);
-
-            // Finalize the hash and get the result
-            byte[] hash = new byte[32];
-            hasher.doFinalize(hash);
-
-            // Print the hash in hexadecimal format
-            // System.out.println(String.format("Key: %s Hash: %s", bytesToHex(key), bytesToHex(hash)));
-            KeyHashPair pair = new KeyHashPair(key, hash);
-            out.write(pair.getKey());
-            out.write(pair.getHash());
-            // Write the pair to the buffer
-            // oos.writeObject(pair);
-            // bos.write(pair.getKey());
-            // bos.write(pair.getHash());
+        byte[] key = new byte[32];
+        for (int j = 0; j < key.length; j++) {
+          key[j] = (byte) (num & 0xFF);
+          num = num >> 8; // Shift right to access next 8 bits
         }
+        // Create a Blake3 hasher
+        Blake3 hasher = Blake3.initKeyedHash(key);
+
+        // Finalize the hash and get the result
+        byte[] hash = new byte[32];
+        hasher.doFinalize(hash);
+
+        // Print the hash in hexadecimal format
+        // System.out.println(String.format("Key: %s Hash: %s", bytesToHex(key), bytesToHex(hash)));
+        KeyHashPair pair = new KeyHashPair(key, hash);
+        out.write(pair.getKey());
+        out.write(pair.getHash());
+        // Write the pair to the buffer
+        // oos.writeObject(pair);
+        // bos.write(pair.getKey());
+        // bos.write(pair.getHash());
+      }
       // Serialize each object
       // oos.writeObject(pair2);
 
@@ -85,52 +82,53 @@ public class Blake3Hashing {
       out.close();
       fs.close();
     } catch (IOException e) {
-        e.printStackTrace();
-      }
-      
-      // try (FileOutputStream fos = new FileOutputStream("data.bin");
-      // BufferedOutputStream bos = new BufferedOutputStream(fos)){
+      e.printStackTrace();
+    }
 
-      //   long max = 1024*1024*1; 
-      //   for (long i = 0; i < max; i++) {
-      //       long num=i;
+    // try (FileOutputStream fos = new FileOutputStream("data.bin");
+    // BufferedOutputStream bos = new BufferedOutputStream(fos)){
 
-      //       byte[] key = new byte[32];
-      //       for (int j = 0; j < key.length; j++) {
-      //         key[j] = (byte) (num & 0xFF);
-      //         num = num >> 8; // Shift right to access next 8 bits
-      //       }
-      //       // Create a Blake3 hasher
-      //       Blake3 hasher = Blake3.initKeyedHash(key);
+    //   long max = 1024*1024*1;
+    //   for (long i = 0; i < max; i++) {
+    //       long num=i;
 
-      //       // Finalize the hash and get the result
-      //       byte[] hash = new byte[32];
-      //       hasher.doFinalize(hash);
+    //       byte[] key = new byte[32];
+    //       for (int j = 0; j < key.length; j++) {
+    //         key[j] = (byte) (num & 0xFF);
+    //         num = num >> 8; // Shift right to access next 8 bits
+    //       }
+    //       // Create a Blake3 hasher
+    //       Blake3 hasher = Blake3.initKeyedHash(key);
 
-      //       // Print the hash in hexadecimal format
-      //       // System.out.println(String.format("Key: %s Hash: %s", bytesToHex(key), bytesToHex(hash)));
-      //       KeyHashPair pair = new KeyHashPair(key, hash);
-      //       // Write the pair to the buffer
-      //       bos.write(pair.getKey());
-      //       bos.write(pair.getHash());
-      //   }
+    //       // Finalize the hash and get the result
+    //       byte[] hash = new byte[32];
+    //       hasher.doFinalize(hash);
 
-      //   // Flush the buffer to write remaining data to the file
-      //   bos.flush();
-      //   // Close the streams
-      //   bos.close();
-      //   fos.close();
-      // }  catch (IOException e) {
-      //   e.printStackTrace();
-      // }
+    //       // Print the hash in hexadecimal format
+    //       // System.out.println(String.format("Key: %s Hash: %s", bytesToHex(key),
+    // bytesToHex(hash)));
+    //       KeyHashPair pair = new KeyHashPair(key, hash);
+    //       // Write the pair to the buffer
+    //       bos.write(pair.getKey());
+    //       bos.write(pair.getHash());
+    //   }
+
+    //   // Flush the buffer to write remaining data to the file
+    //   bos.flush();
+    //   // Close the streams
+    //   bos.close();
+    //   fos.close();
+    // }  catch (IOException e) {
+    //   e.printStackTrace();
+    // }
   }
 
   private static String bytesToHex(byte[] bytes) {
-      StringBuilder sb = new StringBuilder();
-      for (byte b : bytes) {
-          sb.append(String.format("%02x", b));
-      }
-      return sb.toString();
+    StringBuilder sb = new StringBuilder();
+    for (byte b : bytes) {
+      sb.append(String.format("%02x", b));
+    }
+    return sb.toString();
   }
 
   public static void readKeyHashPairs(String filename) {
@@ -143,12 +141,17 @@ public class Blake3Hashing {
         if (bytesRead != pairSize) {
           break;
         }
-        // pairs.add(new KeyHashPair(Arrays.copyOf(data, pairSize / 2), Arrays.copyOfRange(data, pairSize / 2, pairSize)));
-        System.out.println(String.format("Key: %s Hash: %s", bytesToHex(Arrays.copyOf(data, pairSize / 2)), bytesToHex(Arrays.copyOfRange(data, pairSize / 2, pairSize))));
+        // pairs.add(new KeyHashPair(Arrays.copyOf(data, pairSize / 2), Arrays.copyOfRange(data,
+        // pairSize / 2, pairSize)));
+        System.out.println(
+            String.format(
+                "Key: %s Hash: %s",
+                bytesToHex(Arrays.copyOf(data, pairSize / 2)),
+                bytesToHex(Arrays.copyOfRange(data, pairSize / 2, pairSize))));
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
     return;
-  } 
+  }
 }
