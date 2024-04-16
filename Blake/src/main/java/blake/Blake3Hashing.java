@@ -52,16 +52,15 @@ public class Blake3Hashing {
       for (long i = 0; i < max; i++) {
         long num = i;
 
-        byte[] key = new byte[32];
+        byte[] key = new byte[6];
         for (int j = 0; j < key.length; j++) {
           key[j] = (byte) (num & 0xFF);
           num = num >> 8; // Shift right to access next 8 bits
         }
         // Create a Blake3 hasher
-        Blake3 hasher = Blake3.initKeyedHash(key);
-
-        // Finalize the hash and get the result
-        byte[] hash = new byte[32];
+        Blake3 hasher = Blake3.initHash();
+        hasher.update(key);
+        byte[] hash = new byte[10];
         hasher.doFinalize(hash);
 
         // Print the hash in hexadecimal format
@@ -88,7 +87,7 @@ public class Blake3Hashing {
   public static void readKeyHashPairs(String filename) {
     try (FileInputStream fis = new FileInputStream(filename);
         BufferedInputStream bis = new BufferedInputStream(fis)) {
-      int pairSize = 64;
+      int pairSize = 16;
       while (bis.available() > 0) {
         byte[] data = new byte[pairSize];
         int bytesRead = bis.read(data);
@@ -98,8 +97,7 @@ public class Blake3Hashing {
         System.out.println(
             String.format(
                 "Key: %s Hash: %s",
-                bytesToHex(Arrays.copyOf(data, pairSize / 2)),
-                bytesToHex(Arrays.copyOfRange(data, pairSize / 2, pairSize))));
+                bytesToHex(Arrays.copyOf(data, 6)), bytesToHex(Arrays.copyOfRange(data, 6, 16))));
       }
     } catch (IOException e) {
       e.printStackTrace();
