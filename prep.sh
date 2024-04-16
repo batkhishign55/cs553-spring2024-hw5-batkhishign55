@@ -8,6 +8,7 @@ sudo apt install maven
 mvn package
 java -cp target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing
 java -cp target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing read
+hadoop jar target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing read
 
 wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
 tar xzf hadoop-3.3.6.tar.gz
