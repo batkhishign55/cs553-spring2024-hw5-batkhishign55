@@ -42,7 +42,7 @@ public class Blake3Hashing {
         readFromBinary("data.bin");
         break;
       case "write":
-        writeToHdfs("data.bin");
+        writeToHdfs(args[2], args[3]);
         break;
       case "write2":
         writeToLocal("data.bin");
@@ -86,18 +86,14 @@ public class Blake3Hashing {
         KeyHashPair pair = new KeyHashPair(key, hash);
         String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
         writer.append(str);
-        // out.write(pair.getKey());
-        // out.write(pair.getHash());
       }
-      // out.close();
-      // fs.close();
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public static void writeToHdfs(String filename) {
+  public static void writeToHdfs(String filename, String fileSize) {
     Configuration conft = new Configuration();
 
     // Set the configuration for the HDFS instance
@@ -112,8 +108,18 @@ public class Blake3Hashing {
       Path filePath = new Path("data.txt");
       OutputStream os = fs.create(filePath);
 
-      long max = 1024 * 1024 * 1;
-      for (long i = 0; i < max; i++) {
+      long iter = 1024 * 1024 * 1024;
+      if (fileSize.equals("small")) {
+        // 16GB
+        iter *= 1;
+      } else if (fileSize.equals("medium")) {
+        // 32GB
+        iter *= 2;
+      } else if (fileSize.equals("medium")) {
+        // 64GB
+        iter *= 4;
+      }
+      for (long i = 0; i < iter; i++) {
         long num = i;
 
         byte[] key = new byte[6];
@@ -128,16 +134,11 @@ public class Blake3Hashing {
         hasher.doFinalize(hash);
 
         // Print the hash in hexadecimal format
-        // System.out.println(String.format("Key: %s Hash: %s", bytesToHex(key), bytesToHex(hash)));
         KeyHashPair pair = new KeyHashPair(key, hash);
         String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
         // writer.append(str);
         os.write(str.getBytes("UTF-8"));
       }
-
-      // Write content to the file (optional)
-      // String content = "Hello, HDFS!";
-      // os.write(content.getBytes("UTF-8"));
       os.flush();
       os.close();
 
@@ -169,4 +170,3 @@ public class Blake3Hashing {
     return;
   }
 }
-
