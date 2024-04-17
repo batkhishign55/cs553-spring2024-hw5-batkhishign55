@@ -93,7 +93,7 @@ public class Blake3Hashing {
     }
   }
 
-  public static void writeToHdfs(String filename, String fileSize) {
+  public static void writeToHdfs(String dirname, String fileSize) {
     Configuration conft = new Configuration();
 
     // Set the configuration for the HDFS instance
@@ -103,10 +103,6 @@ public class Blake3Hashing {
     try {
       // Get the HDFS instance
       FileSystem fs = FileSystem.get(conft);
-
-      // Create a new file in HDFS
-      Path filePath = new Path("data.txt");
-      OutputStream os = fs.create(filePath);
 
       long iter = 1024 * 1024 * 1024;
       if (fileSize.equals("small")) {
@@ -119,6 +115,12 @@ public class Blake3Hashing {
         // 64GB
         iter *= 4;
       }
+
+      int fileidx = 0;
+      // Create a new file in HDFS
+      Path filePath = new Path(String.format("%s/data%d.txt", dirname, fileidx));
+      OutputStream os = fs.create(filePath);
+
       for (long i = 0; i < iter; i++) {
         long num = i;
 
@@ -138,6 +140,14 @@ public class Blake3Hashing {
         String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
         // writer.append(str);
         os.write(str.getBytes("UTF-8"));
+        if (i % (1024 * 1024 * 4) == 0) {
+          System.out.println(String.format("Flush cycle: %d, %d records", i / (1024 * 1024), i));
+          os.flush();
+          os.close();
+          fileidx += 1;
+          filePath = new Path(String.format("%s/data%d.txt", dirname, fileidx));
+          os = fs.create(filePath);
+        }
       }
       os.flush();
       os.close();
