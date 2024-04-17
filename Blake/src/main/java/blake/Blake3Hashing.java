@@ -45,8 +45,7 @@ public class Blake3Hashing {
 
     Path filePath = new Path("data.bin");
 
-    try (FileSystem fs = FileSystem.get(conf);
-        FSDataOutputStream out = fs.create(filePath); ) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt")); ) {
 
       long max = 1024 * 1024 * 1;
       for (long i = 0; i < max; i++) {
@@ -66,11 +65,14 @@ public class Blake3Hashing {
         // Print the hash in hexadecimal format
         // System.out.println(String.format("Key: %s Hash: %s", bytesToHex(key), bytesToHex(hash)));
         KeyHashPair pair = new KeyHashPair(key, hash);
-        out.write(pair.getKey());
-        out.write(pair.getHash());
+        String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
+        writer.append(str);
+        // out.write(pair.getKey());
+        // out.write(pair.getHash());
       }
-      out.close();
-      fs.close();
+      // out.close();
+      // fs.close();
+      writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
