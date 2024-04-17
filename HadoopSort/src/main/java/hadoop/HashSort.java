@@ -10,19 +10,21 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class HashSort {
-  public class HashSortMapper extends Mapper<LongWritable, Text, Text, Text> {
+  public static class HashSortMapper extends Mapper<LongWritable, Text, Text, Text> {
 
     public void map(LongWritable key, Text value, Context context)
         throws IOException, InterruptedException {
       // Split the input line into key and hash
       String[] parts = value.toString().split("\\s+");
+
+      System.out.println(parts[1]);
       if (parts.length == 2) {
         context.write(new Text(parts[1]), new Text(parts[0]));
       }
     }
   }
 
-  public class HashSortReducer extends Reducer<Text, Text, Text, Text> {
+  public static class HashSortReducer extends Reducer<Text, Text, Text, Text> {
 
     public void reduce(Text key, Iterable<Text> values, Context context)
         throws IOException, InterruptedException {
@@ -47,8 +49,10 @@ public class HashSort {
     job.setInputFormatClass(TextInputFormat.class);
     job.setOutputFormatClass(TextOutputFormat.class);
 
-    TextInputFormat.addInputPath(job, new Path(args[0]));
-    TextOutputFormat.setOutputPath(job, new Path(args[1]));
+    System.out.println(args[1]);
+    System.out.println(args[2]);
+    TextInputFormat.addInputPath(job, new Path(args[1]));
+    TextOutputFormat.setOutputPath(job, new Path(args[2]));
 
     System.exit(job.waitForCompletion(true) ? 0 : 1);
   }
