@@ -140,8 +140,10 @@ public class Blake3Hashing {
         String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
         // writer.append(str);
         os.write(str.getBytes("UTF-8"));
-        if (i % (1024 * 1024 * 4) == 0) {
-          System.out.println(String.format("Flush cycle: %d, %d records", i / (1024 * 1024), i));
+        if (i % (1024 * 1024 * 16) == 0) {
+          System.out.println(
+              String.format("Flush cycle: %d, %d records", i / (1024 * 1024 * 16), i));
+          break;
           os.flush();
           os.close();
           fileidx += 1;
