@@ -6,7 +6,7 @@
 
   <groupId>com.example</groupId>
   <artifactId>blake3-hashing</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1</version>
 
   <properties>
     <java.version>11</java.version>

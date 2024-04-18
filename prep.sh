@@ -1,14 +1,11 @@
-sudo adduser hduser
-
-sudo lxc launch ubuntu:22.04 hadoop-small --vm -c limits.cpu=4 -c limits.memory=4GiB
+sudo lxc launch ubuntu:22.04 tiny --vm -c limits.cpu=4 -c limits.memory=4GiB
+sudo lxc launch ubuntu:22.04 large --vm -c limits.cpu=24 -c limits.memory=24GiB
 sudo lxc shell hadoop-small
 sudo apt-get update && sudo apt-get -y upgrade
 sudo apt install openssh-server openssh-client -y
 sudo apt install openjdk-11-jdk -y
 sudo apt install maven
 
-sudo apt-get install ssh
-sudo apt-get install rsync
 
 mvn package
 java -cp target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing
