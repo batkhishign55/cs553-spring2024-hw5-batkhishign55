@@ -16,6 +16,7 @@ java -cp target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing read
 /usr/local/hadoop/bin/hadoop jar target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing read
 /usr/local/hadoop/bin/hadoop jar target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing write input small
 /usr/local/hadoop/bin/hdfs dfs -ls
+/usr/local/hadoop/bin/hdfs dfsadmin -report
 
 wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
 tar xzf hadoop-3.3.6.tar.gz

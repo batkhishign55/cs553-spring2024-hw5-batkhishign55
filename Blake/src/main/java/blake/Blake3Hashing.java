@@ -116,10 +116,10 @@ public class Blake3Hashing {
         iter *= 4;
       }
 
-      // int fileidx = 0;
       // Create a new file in HDFS
       Path filePath = new Path(String.format("%s/data.txt", dirname));
       OutputStream os = fs.create(filePath);
+      StringBuilder sb = new StringBuilder();
 
       for (long i = 0; i < iter; i++) {
         long num = i;
@@ -137,13 +137,18 @@ public class Blake3Hashing {
 
         // Print the hash in hexadecimal format
         KeyHashPair pair = new KeyHashPair(key, hash);
-        String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
-        // writer.append(str);
-        os.write(str.getBytes("UTF-8"));
+        sb.append(bytesToHex(pair.getKey()));
+        sb.append(" ");
+        sb.append(bytesToHex(pair.getHash()));
+        sb.append("\n");
+        // String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
         if (i % (1024 * 1024 * 16) == 0 && i>0) {
           System.out.println(
               String.format("Flush cycle: %d, %d records", i / (1024 * 1024 * 16), i));
-          break;
+          os.write(sb.toString().getBytes("UTF-8"));
+          sb = new StringBuilder();
+          os.flush();
+          // break;
           // os.flush();
           // os.close();
           // fileidx += 1;
