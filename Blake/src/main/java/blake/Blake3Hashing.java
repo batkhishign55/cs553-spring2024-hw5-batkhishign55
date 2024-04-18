@@ -97,8 +97,8 @@ public class Blake3Hashing {
     Configuration conft = new Configuration();
 
     // Set the configuration for the HDFS instance
-    conft.set(
-        "fs.defaultFS", "hdfs://localhost:9000"); // Change the URI according to your Hadoop setup
+    // conft.set(
+    //     "fs.defaultFS", "hdfs://localhost:9000"); // Change the URI according to your Hadoop setup
 
     try {
       // Get the HDFS instance
@@ -140,7 +140,7 @@ public class Blake3Hashing {
         String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
         // writer.append(str);
         os.write(str.getBytes("UTF-8"));
-        if (i % (1024 * 1024 * 16) == 0) {
+        if (i % (1024 * 1024 * 16) == 0 && i>0) {
           System.out.println(
               String.format("Flush cycle: %d, %d records", i / (1024 * 1024 * 16), i));
           break;
