@@ -116,9 +116,9 @@ public class Blake3Hashing {
         iter *= 4;
       }
 
-      int fileidx = 0;
+      // int fileidx = 0;
       // Create a new file in HDFS
-      Path filePath = new Path(String.format("%s/data%d.txt", dirname, fileidx));
+      Path filePath = new Path(String.format("%s/data.txt", dirname));
       OutputStream os = fs.create(filePath);
 
       for (long i = 0; i < iter; i++) {
@@ -144,11 +144,11 @@ public class Blake3Hashing {
           System.out.println(
               String.format("Flush cycle: %d, %d records", i / (1024 * 1024 * 16), i));
           break;
-          os.flush();
-          os.close();
-          fileidx += 1;
-          filePath = new Path(String.format("%s/data%d.txt", dirname, fileidx));
-          os = fs.create(filePath);
+          // os.flush();
+          // os.close();
+          // fileidx += 1;
+          // filePath = new Path(String.format("%s/data%d.txt", dirname, fileidx));
+          // os = fs.create(filePath);
         }
       }
       os.flush();
