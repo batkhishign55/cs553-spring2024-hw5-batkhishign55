@@ -136,15 +136,22 @@ public class Blake3Hashing {
         hasher.doFinalize(hash);
 
         // Print the hash in hexadecimal format
-        KeyHashPair pair = new KeyHashPair(key, hash);
-        sb.append(bytesToHex(pair.getKey()));
+        // KeyHashPair pair = new KeyHashPair(key, hash);
+
+        for (byte b : key) {
+          sb.append(String.format("%02x", b));
+        }
+        // sb.append(bytesToHex(key));
         sb.append(" ");
-        sb.append(bytesToHex(pair.getHash()));
+        for (byte b : hash) {
+          sb.append(String.format("%02x", b));
+        }
+        // sb.append(bytesToHex(hash));
         sb.append("\n");
         // String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
-        if (i % (1024 * 1024 * 16) == 0 && i>0) {
+        if (i % (1024 * 1024) == 0 && i>0) {
           System.out.println(
-              String.format("Flush cycle: %d, %d records", i / (1024 * 1024 * 16), i));
+              String.format("Flush cycle: %d, %d records", i / (1024 * 1024), i));
           os.write(sb.toString().getBytes("UTF-8"));
           sb = new StringBuilder();
           os.flush();
