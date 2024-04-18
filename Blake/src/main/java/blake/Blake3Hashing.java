@@ -36,7 +36,6 @@ class KeyHashPair {
 
 public class Blake3Hashing {
   public static void main(String[] args) {
-    System.out.println(args[1]);
     switch (args[1]) {
       case "read":
         readFromBinary("data.bin");
@@ -94,6 +93,9 @@ public class Blake3Hashing {
   }
 
   public static void writeToHdfs(String dirname, String fileSize) {
+    System.out.println(String.format("[OPERATION]: GENERATE ON HDFS"));
+    System.out.println(String.format("[DIRECTORY]: %s", dirname));
+    System.out.println(String.format("[FILESIZE]: %s", fileSize));
     Configuration conft = new Configuration();
 
     // Set the configuration for the HDFS instance
@@ -115,6 +117,9 @@ public class Blake3Hashing {
         // 64GB
         iter *= 4;
       }
+      System.out.println(String.format("[NO_RECORDS]: %d", iter));
+      int flushSize=1024 * 1024;
+      System.out.println(String.format("[FLUSH SIZE]: %d records", flushSize));
 
       // Create a new file in HDFS
       Path filePath = new Path(String.format("%s/data.txt", dirname));
@@ -149,9 +154,9 @@ public class Blake3Hashing {
         // sb.append(bytesToHex(hash));
         sb.append("\n");
         // String str = bytesToHex(pair.getKey()) + " " + bytesToHex(pair.getHash()) + "\n";
-        if (i % (1024 * 1024) == 0 && i>0) {
+        if (i % flushSize == 0 && i>0) {
           System.out.println(
-              String.format("Flush cycle: %d, %d records", i / (1024 * 1024), i));
+              String.format("\t Flush cycle: %d, %d records", i / flushSize, i));
           os.write(sb.toString().getBytes("UTF-8"));
           sb = new StringBuilder();
           os.flush();
