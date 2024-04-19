@@ -17,7 +17,7 @@ public class HashSort {
       // Split the input line into key and hash
       String[] parts = value.toString().split("\\s+");
 
-      System.out.println(parts[1]);
+      // System.out.println(parts[1]);
       if (parts.length == 2) {
         context.write(new Text(parts[1]), new Text(parts[0]));
       }
