@@ -41,7 +41,7 @@ public class Blake3Hashing {
         readFromBinary("data.bin");
         break;
       case "write":
-        writeToHdfs(args[2], args[3]);
+        writeToHdfs(args[2], args[3], args[4], args[5]);
         break;
       case "write2":
         writeToLocal("data.bin");
@@ -92,10 +92,12 @@ public class Blake3Hashing {
     }
   }
 
-  public static void writeToHdfs(String dirname, String fileSize) {
+  public static void writeToHdfs(String dirname, String fileSize, String startIdx, String endIdx) {
     System.out.println(String.format("[OPERATION]: GENERATE ON HDFS"));
     System.out.println(String.format("[DIRECTORY]: %s", dirname));
     System.out.println(String.format("[FILESIZE]: %s", fileSize));
+    System.out.println(String.format("[STARTIDX]: %s", startIdx));
+    System.out.println(String.format("[ENDIDX]: %s", endIdx));
     Configuration conft = new Configuration();
 
     // Set the configuration for the HDFS instance
@@ -105,20 +107,20 @@ public class Blake3Hashing {
     try {
       // Get the HDFS instance
       FileSystem fs = FileSystem.get(conft);
-      long start = 0;
+      long start = 1024 * 1024 * Integer.valueOf(startIdx);
 
-      long iter = 1024 * 1024 * 128;
-      if (fileSize.equals("small")) {
-        // 16GB
-        iter *= 1;
-      } else if (fileSize.equals("medium")) {
-        // 32GB
-        iter *= 2;
-      } else if (fileSize.equals("medium")) {
-        // 64GB
-        iter *= 4;
-      }
-      System.out.println(String.format("[NO_RECORDS]: %d", iter));
+      long end = 1024 * 1024 * Integer.valueOf(endIdx);
+      // if (fileSize.equals("small")) {
+      //   // 16GB
+      //   iter *= 1;
+      // } else if (fileSize.equals("medium")) {
+      //   // 32GB
+      //   iter *= 2;
+      // } else if (fileSize.equals("medium")) {
+      //   // 64GB
+      //   iter *= 4;
+      // }
+      System.out.println(String.format("[NO_RECORDS]: %dG", (end-start)/1024/1024));
       int flushSize=1024 * 1024;
       System.out.println(String.format("[FLUSH SIZE]: %d records", flushSize));
 
@@ -127,7 +129,7 @@ public class Blake3Hashing {
       OutputStream os = fs.create(filePath);
       StringBuilder sb = new StringBuilder();
 
-      for (long i = start; i < iter; i++) {
+      for (long i = start; i < end; i++) {
         long num = i;
 
         byte[] key = new byte[6];

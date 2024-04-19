@@ -4,9 +4,10 @@ sudo apt install openjdk-11-jdk -y
 sudo apt-get install ssh
 sudo apt-get install rsync
 wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+lxc config device override <cont-name> root size=250GiB
 tar xzf hadoop-3.3.6.tar.gz
 sudo mv hadoop-3.3.6 /usr/local/hadoop
-echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")' | sudo tee -a /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+echo 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' | sudo tee -a /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 
 export HADOOP_HOME=/usr/local/hadoop
 export HADOOP_INSTALL=$HADOOP_HOME
@@ -19,7 +20,7 @@ head -n -3 $HADOOP_HOME/etc/hadoop/core-site.xml > temp.txt && mv temp.txt $HADO
 echo "<configuration>" >> $HADOOP_HOME/etc/hadoop/core-site.xml
 echo "  <property>" >> $HADOOP_HOME/etc/hadoop/core-site.xml
 echo "      <name>fs.defaultFS</name>" >> $HADOOP_HOME/etc/hadoop/core-site.xml
-echo "      <value>hdfs://10.208.93.74:9000</value>" >> $HADOOP_HOME/etc/hadoop/core-site.xml
+echo "      <value>hdfs://10.208.93.242:9000/</value>" >> $HADOOP_HOME/etc/hadoop/core-site.xml
 echo "  </property>" >> $HADOOP_HOME/etc/hadoop/core-site.xml
 echo "</configuration>" >> $HADOOP_HOME/etc/hadoop/core-site.xml
 
@@ -31,13 +32,15 @@ echo "      <value>1</value>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 echo "  </property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 echo "  <property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 echo "      <name>dfs.namenode.name.dir</name>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-echo "      <value>file:///home/hadoop/hadoopdata/hdfs/namenode</value>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-echo "  </property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-echo "  <property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-echo "      <name>dfs.datanode.data.dir</name>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-echo "      <value>file:///home/hadoop/hadoopdata/hdfs/datanode</value>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+echo "      <value>file:///hdfs/namenode</value>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 echo "  </property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 echo "</configuration>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+
+
+echo "  <property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+echo "      <name>dfs.datanode.data.dir</name>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+echo "      <value>file:///hdfs/datanode</value>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+echo "  </property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 
 head -n -5 $HADOOP_HOME/etc/hadoop/yarn-site.xml > temp.txt && mv temp.txt $HADOOP_HOME/etc/hadoop/yarn-site.xml
 echo "<configuration>" >> $HADOOP_HOME/etc/hadoop/yarn-site.xml
@@ -46,6 +49,14 @@ echo "      <name>yarn.nodemanager.aux-services</name>" >> $HADOOP_HOME/etc/hado
 echo "      <value>mapreduce_shuffle</value>" >> $HADOOP_HOME/etc/hadoop/yarn-site.xml
 echo "  </property>" >> $HADOOP_HOME/etc/hadoop/yarn-site.xml
 echo "</configuration>" >> $HADOOP_HOME/etc/hadoop/yarn-site.xml
+
+head -n -3 $HADOOP_HOME/etc/hadoop/mapred-site.xml > temp.txt && mv temp.txt $HADOOP_HOME/etc/hadoop/mapred-site.xml
+echo "<configuration>" >> $HADOOP_HOME/etc/hadoop/mapred-site.xml
+echo "  <property>" >> $HADOOP_HOME/etc/hadoop/mapred-site.xml
+echo "      <name>mapreduce.framework.name</name>" >> $HADOOP_HOME/etc/hadoop/mapred-site.xml
+echo "      <value>yarn</value>" >> $HADOOP_HOME/etc/hadoop/mapred-site.xml
+echo "  </property>" >> $HADOOP_HOME/etc/hadoop/mapred-site.xml
+echo "</configuration>" >> $HADOOP_HOME/etc/hadoop/mapred-site.xml
 
 $HADOOP_HOME/bin/hdfs namenode -format
 $HADOOP_HOME/bin/hdfs --daemon start namenode
