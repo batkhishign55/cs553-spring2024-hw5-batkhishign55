@@ -125,7 +125,7 @@ public class Blake3Hashing {
       System.out.println(String.format("[FLUSH SIZE]: %d records", flushSize));
 
       // Create a new file in HDFS
-      Path filePath = new Path(String.format("%s/data.txt", dirname));
+      Path filePath = new Path(String.format("%s/data%d.txt", dirname, Integer.valueOf(startIdx)/128));
       OutputStream os = fs.create(filePath);
       StringBuilder sb = new StringBuilder();
 
