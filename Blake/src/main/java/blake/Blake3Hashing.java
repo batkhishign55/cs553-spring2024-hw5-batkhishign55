@@ -105,8 +105,9 @@ public class Blake3Hashing {
     try {
       // Get the HDFS instance
       FileSystem fs = FileSystem.get(conft);
+      long start = 0;
 
-      long iter = 1024 * 1024 * 1024;
+      long iter = 1024 * 1024 * 128;
       if (fileSize.equals("small")) {
         // 16GB
         iter *= 1;
@@ -126,7 +127,7 @@ public class Blake3Hashing {
       OutputStream os = fs.create(filePath);
       StringBuilder sb = new StringBuilder();
 
-      for (long i = 0; i < iter; i++) {
+      for (long i = start; i < iter; i++) {
         long num = i;
 
         byte[] key = new byte[6];
