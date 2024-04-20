@@ -1,10 +1,10 @@
-
+sudo apt-get update
 sudo apt install openssh-server openssh-client -y
 sudo apt install openjdk-11-jdk -y
 sudo apt-get install ssh
 sudo apt-get install rsync
+
 wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
-lxc config device override <cont-name> root size=250GiB
 tar xzf hadoop-3.3.6.tar.gz
 sudo mv hadoop-3.3.6 /usr/local/hadoop
 echo 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' | sudo tee -a /usr/local/hadoop/etc/hadoop/hadoop-env.sh
@@ -36,12 +36,6 @@ echo "      <value>file:///hdfs/namenode</value>" >> $HADOOP_HOME/etc/hadoop/hdf
 echo "  </property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 echo "</configuration>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
 
-
-echo "  <property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-echo "      <name>dfs.datanode.data.dir</name>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-echo "      <value>file:///hdfs/datanode</value>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-echo "  </property>" >> $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-
 head -n -5 $HADOOP_HOME/etc/hadoop/yarn-site.xml > temp.txt && mv temp.txt $HADOOP_HOME/etc/hadoop/yarn-site.xml
 echo "<configuration>" >> $HADOOP_HOME/etc/hadoop/yarn-site.xml
 echo "  <property>" >> $HADOOP_HOME/etc/hadoop/yarn-site.xml
@@ -63,4 +57,5 @@ $HADOOP_HOME/bin/hdfs --daemon start namenode
 $HADOOP_HOME/bin/yarn --daemon start resourcemanager
 $HADOOP_HOME/bin/yarn --daemon start nodemanager
 $HADOOP_HOME/bin/yarn --daemon start proxyserver
+$HADOOP_HOME/bin/mapred --daemon start historyserver
 jps

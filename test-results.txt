@@ -1,0 +1,11 @@
+
+Hadoop tiny-large, small:
+2024-04-19 17:38:43,258 INFO mapreduce.Job: Running job: job_local520645643_0001
+2024-04-19 18:18:45,289 INFO mapreduce.Job: Job job_local520645643_0001 completed successfully
+
+Hadoop tiny-large, medium:
+2024-04-19 23:35:52,418 INFO mapreduce.Job: Running job: job_local428455643_0001
+2024-04-20 01:00:20,391 INFO mapreduce.Job: Job job_local428455643_0001 completed successfully
+
+
+2024-04-20 02:24:58,206 INFO mapreduce.Job: Running job: job_local492124906_0001

@@ -1,17 +1,10 @@
-sudo lxc launch ubuntu:22.04 tiny --vm -c limits.cpu=4 -c limits.memory=4GiB
-sudo lxc launch ubuntu:22.04 large --vm -c limits.cpu=24 -c limits.memory=24GiB
-sudo lxc shell hadoop-small
-sudo apt-get update && sudo apt-get -y upgrade
-sudo apt install openssh-server openssh-client -y
-sudo apt install openjdk-11-jdk -y
-sudo apt install maven
 
 
-mvn package
-java -cp target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing
-java -cp target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing read
-/usr/local/hadoop/bin/hadoop jar target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing read
-/usr/local/hadoop/bin/hadoop jar target/blake3-hashing-1.0-SNAPSHOT.jar blake.Blake3Hashing write input small
+lxc config device override <cont-name> root size=250GiB
+lxc storage set default volume.size 100GB
+sudo systemctl reload snap.lxd.daemon
+lxc storage info default
+
 /usr/local/hadoop/bin/hdfs dfs -ls
 /usr/local/hadoop/bin/hdfs dfsadmin -report
 /usr/local/hadoop/bin/hadoop jar target/hadoop-sort-0.1.jar hadoop.HashSort input output
