@@ -1,0 +1,13 @@
+NUM_THREADS_SORT: 16
+NUM_THREADS_HASH: 8
+NUM_THREADS_WRITE: 4
+TOTAL_RECORD_SIZE: 16384MB
+RECORD_SIZE: 16B
+HASH_SIZE: 10B
+NONCE_SIZE: 6B
+1073741824
+Hash Generation Elapsed time (s): 148.819389
+Sorting Elapsed time (s): 26.932335
+Processing Elapsed time (s): 13.506235
+Writing Elapsed time (s): 0.001510
+Elapsed time (s): 189.259472
