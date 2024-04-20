@@ -15,14 +15,9 @@
 -->
 
 <!-- Put site-specific property overrides in this file. -->
-
 <configuration>
   <property>
-      <name>dfs.replication</name>
-      <value>1</value>
-  </property>
-  <property>
-      <name>dfs.namenode.name.dir</name>
-      <value>file:///hdfs/namenode</value>
+      <name>fs.defaultFS</name>
+      <value>hdfs://10.208.93.242:9000/</value>
   </property>
 </configuration>

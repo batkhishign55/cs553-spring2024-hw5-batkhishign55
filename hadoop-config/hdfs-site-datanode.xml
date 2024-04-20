@@ -18,11 +18,7 @@
 
 <configuration>
   <property>
-      <name>dfs.replication</name>
-      <value>1</value>
-  </property>
-  <property>
-      <name>dfs.namenode.name.dir</name>
-      <value>file:///hdfs/namenode</value>
+      <name>dfs.datanode.data.dir</name>
+      <value>file:///hdfs/datanode</value>
   </property>
 </configuration>
