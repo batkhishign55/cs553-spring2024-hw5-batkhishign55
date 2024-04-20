@@ -5,6 +5,46 @@
 **Students**:  
 * Batkhishig Dulamsurankhor (bdulamsurankhor@hawk.iit.edu) A20543498
 
+## Repo structure
+```bash
+.
+├── Blake                        # hadoop hashgen root dir
+│   ├── data.txt
+│   ├── dependency-reduced-pom.xml
+│   ├── pom.xml
+│   ├── src
+│   │   └── main
+│   │       └── java
+│   │           └── blake
+│   │               └── Blake3Hashing.java
+│   └── target
+├── HadoopSort                   # hadoop sort root dir
+│   ├── dependency-reduced-pom.xml
+│   ├── log.txt
+│   ├── pom.xml
+│   ├── src
+│   │   └── main
+│   │       └── java
+│   │           └── hadoop
+│   │               └── HashSort.java
+│   └── target
+├── README.md
+├── hadoop-config           # hadoop config files
+│   ├── core-site-datanode.xml
+│   ├── core-site.xml
+│   ├── hdfs-site-datanode.xml
+│   ├── hdfs-site.xml
+│   ├── mapred-site.xml
+│   └── yarn-site.xml
+├── hadoop-root-namenode-tiny.log   # hadoop namenode log (parts of mapreduce log)
+├── hw5_report.pdf                  # report
+├── prep.sh
+├── setup-hd-datanode.sh            # hadoop datanode setup script
+├── setup-hd-namenode.sh            # hadoop namenode setup script
+├── test-results.txt
+└── vault
+```
+
 ## Setting up Hadoop
 Start VMs with lxd.
 ```bash
@@ -76,3 +116,5 @@ Run the generated jar.
 ```bash
 /usr/local/hadoop/bin/hadoop jar target/hadoop-sort-0.1.jar hadoop.HashSort input output
 ```
+
+The result will be in output directory in hdfs.
